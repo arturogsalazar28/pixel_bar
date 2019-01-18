@@ -69,6 +69,7 @@ def button_callback(channel):
 #                                         \$$      
 
 # Set button selector pin to be an input pin and set initial value to be pulled low (off)
+<<<<<<< HEAD
 GPIO.setmode(GPIO.BCM)
 COLOR_BUTTON = board.D23
 GPIO.setup(COLOR_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
@@ -77,6 +78,16 @@ GPIO.setup(COLOR_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_DOWN)
 PIXEL_PIN = board.D18
 ORDER = neopixel.GRB
 pixels = neopixel.NeoPixel(PIXEL_PIN, PIXEL_COUNT, brightness=0.5, auto_write=False, pixel_order=ORDER)
+=======
+# Button connects to power and to pin 18, pin 18 side gets grounded by a 10k ohm resistor
+COLOR_BUTTON = 18
+GPIO.setup(COLOR_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
+
+# Specify a software SPI connection for Raspberry Pi on the following pins:
+PIXEL_CLOCK = 23
+PIXEL_DOUT  = 19
+pixels = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, clk=PIXEL_CLOCK, do=PIXEL_DOUT)
+>>>>>>> 85671d3c82a651f11e1ddf749cc25b15c19035bf
 pixels.clear()
 pixels.show()
 
