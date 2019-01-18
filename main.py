@@ -1,10 +1,11 @@
 # Import the WS2801 module.
 import time
+import board
+import neopixel
 import RPi.GPIO as GPIO
-import Adafruit_WS2801
-import Adafruit_GPIO.SPI as SPI
 
 PIXEL_COUNT = 30
+
 colorCounter = 0
 colorList = [
     [255,108,17], # FF6C11 Cool orange
@@ -30,16 +31,16 @@ colorList = [
     [229,48,28], # E5301C Lightsaber red
     [99,235,230], # 63EBE6 Lightsaber cyan
     [32,35,254] # 2023FE Lightsaber blue
-
 ]
 
 def button_callback(channel):
     global colorCounter
 
+    color = colorList[colorCounter]
+    
     # Fill the pixels with the color in the list
     for i in range(0,PIXEL_COUNT):
-        color = colorList[i]
-        pixels.set_pixel_rgb(i, color[0], color[1], color[2])
+        pixels[i] = (color[1], color[0], color[2])
 
     pixels.show()
     
@@ -49,6 +50,8 @@ def button_callback(channel):
         colorCounter = 0
     else:
         colorCounter = colorCounter + 1
+
+    time.sleep(0.2)
 
 
 
@@ -65,17 +68,15 @@ def button_callback(channel):
 #                                        | $$      
 #                                         \$$      
 
-# Use physical pin numbering for button
-GPIO.setmode(GPIO.BOARD)
-
 # Set button selector pin to be an input pin and set initial value to be pulled low (off)
-COLOR_BUTTON = 18
+GPIO.setmode(GPIO.BCM)
+COLOR_BUTTON = board.D23
 GPIO.setup(COLOR_BUTTON, GPIO.IN, pull_up_down=GPIO.PUD_DOWN) 
 
 # Specify a software SPI connection for Raspberry Pi on the following pins:
-PIXEL_CLOCK = 14
-PIXEL_DOUT  = 15
-pixels = Adafruit_WS2801.WS2801Pixels(PIXEL_COUNT, clk=PIXEL_CLOCK, do=PIXEL_DOUT)
+PIXEL_PIN = board.D18
+ORDER = neopixel.GRB
+pixels = neopixel.NeoPixel(PIXEL_PIN, PIXEL_COUNT, brightness=0.5, auto_write=False, pixel_order=ORDER)
 pixels.clear()
 pixels.show()
 
